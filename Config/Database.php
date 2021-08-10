@@ -12,7 +12,7 @@ class Database implements IDatabase
 	private $username = __USERNAME__;
 	private $password = __PASSWORD__;
 	private $database = __DATABASE__;
-	private $conn;
+	private static $conn;
 
 	// function __construct(argument)
 	// {
@@ -24,17 +24,18 @@ class Database implements IDatabase
 		$this->conn=null;
 
 		try 
-		{
-			$this->conn = new mysqli($this->host, $this->username, $this->password, $this->database);	
-			if(!$this->conn) {
-				throw new Exception("Failed to connect to database");
+		{	if(!self::$conn) {
+				self::$conn = new mysqli($this->host, $this->username, $this->password, $this->database);
+				if(!self::$conn){
+					throw new Exception("Failed to connect to database");
+				}
 			}		
 		} 
 		catch (Exception $e) 
 		{
 			echo 'Connection Error: '. $e->getMessage();
 		}
-		return $this->conn;
+		return self::$conn;
 	}
 }
 
